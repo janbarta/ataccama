@@ -65,11 +65,17 @@ class ItemHead extends React.Component {
     render() {
         if (_.isArray(this.items)) {
             return (
-                <tr>{_.keys(this.items[0]).map(this.renderColumn)}</tr>
+                <tr>
+                    {_.keys(this.items[0]).map(this.renderColumn)}
+                    <th>Delete</th>
+                </tr>
                 );
         } else {
             return (
-                <tr>{_.keys(this.items).map(this.renderColumn)}</tr>
+                <tr>
+                    {_.keys(this.items).map(this.renderColumn)}
+                    <th>Delete</th>
+                </tr>
             );
         }
 
@@ -88,14 +94,20 @@ class ItemRow extends React.Component {
         super(props);
 
         this.item = props.item;
+        this.id = props.id;
     }
 
     render() {
         return (
             <tr>
                 {_.values(this.item).map(this.renderColumn)}
+                <td><a onClick={this.deleteItem.bind(this, this)}>Delete</a></td>
             </tr>
         );
+    }
+
+    deleteItem(self) {
+        console.log(`Delete: ${self}`);
     }
 
     renderColumn(property) {
