@@ -1,20 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import DataService from './dataService.js';
 import _ from 'lodash';
+import { createStore } from 'redux'
+
+import dataReducer from './dataReducer'
+
+
+let dataStore = createStore(dataReducer);
 
 class App extends React.Component {
 
     constructor(props) {
         super(props);
 
-        this.items = DataService.getData();
+        this.items = dataStore.getState();
     }
 
     render() {
         return (
             <ItemTable items={this.items}></ItemTable>
         );
+    }
+
+    componentDidMount() {
+        this.unsubscribe = dataStore.subscribe(() =>  {
+            this.setState({
+                items: (dataStore.getState())
+            });
+        })
+    }
+
+    componentWillUnmount() {
+        this.unsubscribe();
     }
 }
 
@@ -101,13 +118,14 @@ class ItemRow extends React.Component {
         return (
             <tr>
                 {_.values(this.item).map(this.renderColumn)}
-                <td><a onClick={this.deleteItem.bind(this, this)}>Delete</a></td>
+                <td><a onClick={this.deleteItem.bind(this, this.item)}>Delete</a></td>
             </tr>
         );
     }
 
-    deleteItem(self) {
+    deleteItem(item) {
         console.log(`Delete: ${self}`);
+        dataStore.dispatch({type: 'DELETE', item: item});
     }
 
     renderColumn(property) {
