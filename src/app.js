@@ -35,6 +35,7 @@ class App extends React.Component {
     }
 }
 
+//TODO: split into separate files
 class ItemTable extends React.Component {
 
     constructor(props) {
@@ -77,12 +78,14 @@ class ItemHead extends React.Component {
         super(props);
 
         this.items = props.items;
+        this.headerItems = []
     }
 
     render() {
         if (_.isArray(this.items)) {
             return (
                 <tr>
+                    <!-- TODO: get keys from all items, not only first -->
                     {_.keys(this.items[0]).map(this.renderColumn)}
                     <th>Delete</th>
                 </tr>
